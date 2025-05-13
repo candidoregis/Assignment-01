@@ -8,11 +8,13 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.tree import DecisionTreeRegressor
 
 # Load the dataset
 data = pd.read_excel('SalesDB.xlsx')
@@ -131,11 +133,11 @@ categorical_features = [
 ]
 
 # Print feature information
-print(f'\nNumerical features: {len(numerical_features)}')
-print(numerical_features)
+#print(f'\nNumerical features: {len(numerical_features)}')
+##print(numerical_features)
 
-print(f'\nCategorical features: {len(categorical_features)}')
-print(categorical_features)
+#print(f'\nCategorical features: {len(categorical_features)}')
+#print(categorical_features)
 
 # For regression (predicting Profit_Margin)
 y_regres = data['Profit_Margin']
@@ -173,8 +175,8 @@ _, _, y_clf_train, y_clf_test = train_test_split(
 )
 
 # Print the sizes of the training and test sets
-print(f'\nTraining set size: {X_train.shape[0]} samples')
-print(f'Test set size: {X_test.shape[0]} samples')
+# print(f'\nTraining set size: {X_train.shape[0]} samples')
+# print(f'Test set size: {X_test.shape[0]} samples')
 
 # Apply preprocessing to get transformed feature matrix
 X_train_transformed = preprocessor.fit_transform(X_train)
@@ -188,5 +190,16 @@ feature_names = (
          .get_feature_names_out(categorical_features))
 )
 
-print(f'\nTransformed feature matrix shape: {X_train_transformed.shape}')
-print(f'Number of features after preprocessing: {len(feature_names)}')
+# Linear Regression
+lr = LinearRegression()
+lr.fit(X_train_transformed, y_reg_train)
+lr_pred = lr.predict(X_test_transformed)
+
+r2 = r2_score(y_reg_test, lr_pred)
+rmse = np.sqrt(mean_squared_error(y_reg_test, lr_pred))
+mae = mean_absolute_error(y_reg_test, lr_pred)
+
+print(f'\nLinear Regression Performance:')
+print(f'R² Score: {r2:.4f}')
+print(f'RMSE: {rmse:.4f}')
+print(f'MAE: {mae:.4f}')
