@@ -205,7 +205,7 @@ print(f'RMSE: {rmse:.4f}')
 print(f'MAE: {mae:.4f}') """
 
 # Random Forest Regressor
-rf = RandomForestRegressor(n_estimators=100, random_state=42)
+""" rf = RandomForestRegressor(n_estimators=100, random_state=42)
 rf.fit(X_train_transformed, y_reg_train)
 rf_pred = rf.predict(X_test_transformed)
 
@@ -214,6 +214,20 @@ rmse = np.sqrt(mean_squared_error(y_reg_test, rf_pred))
 mae = mean_absolute_error(y_reg_test, rf_pred)
 
 print(f'\nRandom Forest Regression Performance:')
+print(f'R² Score: {r2:.4f}')
+print(f'RMSE: {rmse:.4f}')
+print(f'MAE: {mae:.4f}') """
+
+# Decision Tree Regressor
+dt = DecisionTreeRegressor(random_state=42)
+dt.fit(X_train_transformed, y_reg_train)
+dt_pred = dt.predict(X_test_transformed)
+
+r2 = r2_score(y_reg_test, dt_pred)
+rmse = np.sqrt(mean_squared_error(y_reg_test, dt_pred))
+mae = mean_absolute_error(y_reg_test, dt_pred)
+
+print(f'\nDecision Tree Regression Performance:')
 print(f'R² Score: {r2:.4f}')
 print(f'RMSE: {rmse:.4f}')
 print(f'MAE: {mae:.4f}')
