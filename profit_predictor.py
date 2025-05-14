@@ -191,22 +191,22 @@ feature_names = (
 )
 
 # Linear Regression
-lr = LinearRegression()
-lr.fit(X_train_transformed, y_reg_train)
-lr_pred = lr.predict(X_test_transformed)
+""" linRegression = LinearRegression()
+linRegression.fit(X_train_transformed, y_reg_train)
+lr_pred = linRegression.predict(X_test_transformed) """
 
 # Random Forest Regressor
-rf = RandomForestRegressor(n_estimators=100, random_state=42)
-rf.fit(X_train_transformed, y_reg_train)
-rf_pred = rf.predict(X_test_transformed)
+randForest = RandomForestRegressor(n_estimators=100, random_state=42)
+randForest.fit(X_train_transformed, y_reg_train)
+rf_pred = randForest.predict(X_test_transformed)
 
 # Decision Tree Regressor
-dt = DecisionTreeRegressor(random_state=42)
-dt.fit(X_train_transformed, y_reg_train)
-dt_pred = dt.predict(X_test_transformed)
+decTree = DecisionTreeRegressor(random_state=42)
+decTree.fit(X_train_transformed, y_reg_train)
+dt_pred = decTree.predict(X_test_transformed)
 
 # Function to calculate evaluation metrics
-def evaluate_regression(y_true, y_pred, model_name):
+""" def evaluate_regression(y_true, y_pred, model_name):
     r2 = r2_score(y_true, y_pred)
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = mean_absolute_error(y_true, y_pred)
@@ -216,4 +216,66 @@ def evaluate_regression(y_true, y_pred, model_name):
     print(f'RMSE: {rmse:.4f}')
     print(f'MAE: {mae:.4f}')
     
-    return {'Model': model_name, 'R² Score': r2, 'RMSE': rmse, 'MAE': mae}
+    return {'Model': model_name, 'R² Score': r2, 'RMSE': rmse, 'MAE': mae} """
+
+# Evaluate all models and store results in a list
+""" results = []
+results.append(evaluate_regression(y_reg_test, lr_pred, 'Linear Regression'))
+results.append(evaluate_regression(y_reg_test, rf_pred, 'Random Forest'))
+results.append(evaluate_regression(y_reg_test, dt_pred, 'Decision Tree')) """
+
+# Create a summary table to display the results
+""" regression_results_df = pd.DataFrame(results)
+print('\nRegression Models Summary:')
+print(regression_results_df) """
+
+# Random Forest feature importance
+randForest_importance = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': randForest.feature_importances_
+}).sort_values('Importance', ascending=False)
+
+print('\nRandom Forest Feature Importance:')
+print(randForest_importance.head(10))
+
+# Visualization 06 - Plot feature importance for Random Forest
+plt.figure(figsize=(12, 8))
+top_features = randForest_importance.head(10)
+ax = sns.barplot(x='Importance', y='Feature', data=top_features)
+# Add the value at the end of each bar
+for i in ax.patches:
+    ax.text(
+        i.get_width() + 0.01,             # x position: slightly to the right of the bar
+        i.get_y() + i.get_height() / 2,   # y position: vertical center of the bar
+        f'{i.get_width():.6f}',           # text to display (formatted float)
+        va='center'                       # vertical alignment
+    )
+plt.title('Random Forest - Top 10 Feature Importance for Profit Margin Prediction')
+plt.tight_layout()
+plt.savefig('visualizations/06-random_forest_feature_importance.png')
+plt.close()
+
+# Decision Tree feature importance
+decTree_importance = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': decTree.feature_importances_
+}).sort_values('Importance', ascending=False)
+
+print('\nDecision Tree Feature Importance:')
+print(decTree_importance.head(10))
+
+# Visualization 07 - Plot feature importance for Decision Tree
+plt.figure(figsize=(12, 8))
+top_features = decTree_importance.head(10)
+ax = sns.barplot(x='Importance', y='Feature', data=top_features)
+for i in ax.patches: # Add the value at the end of each bar
+    ax.text(
+        i.get_width() + 0.01,             # x position: slightly to the right of the bar
+        i.get_y() + i.get_height() / 2,   # y position: vertical center of the bar
+        f'{i.get_width():.6f}',           # text to display (formatted float)
+        va='center'                       # vertical alignment
+    )
+plt.title('Decision Tree - Top 10 Feature Importance for Profit Margin Prediction')
+plt.tight_layout()
+plt.savefig('visualizations/07-decision_tree_feature_importance.png')
+plt.close()
