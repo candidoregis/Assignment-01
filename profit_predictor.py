@@ -10,8 +10,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.metrics import accuracy_score, auc, confusion_matrix, f1_score, mean_absolute_error, mean_squared_error, precision_score, r2_score, recall_score, roc_curve
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
@@ -88,7 +88,7 @@ correlation_matrix = numerical_columns.corr(method='spearman')
 # print(numerical_columns.head())
 
 # Visualization 04 - Correlation Matrix [Method: Pearson]
-""" plt.figure(figsize=(14, 10))
+""" plt.figure(figsize=(10, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
 plt.title('Correlation Matrix of Numerical Features - Pearson')
 plt.tight_layout()
@@ -99,7 +99,7 @@ plt.close() """
 correlation_matrix = numerical_columns.corr(method='spearman')
 
 # Visualization 05 - Correlation Matrix [Method: Pearson]
-""" plt.figure(figsize=(14, 10))
+""" plt.figure(figsize=(10, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
 plt.title('Correlation Matrix of Numerical Features - Spearman')
 plt.tight_layout()
@@ -196,14 +196,14 @@ linRegression.fit(X_train_transformed, y_reg_train)
 lr_pred = linRegression.predict(X_test_transformed) """
 
 # Random Forest Regressor
-randForest = RandomForestRegressor(n_estimators=100, random_state=42)
+""" randForest = RandomForestRegressor(n_estimators=100, random_state=42)
 randForest.fit(X_train_transformed, y_reg_train)
-rf_pred = randForest.predict(X_test_transformed)
+rf_pred = randForest.predict(X_test_transformed) """
 
 # Decision Tree Regressor
-decTree = DecisionTreeRegressor(random_state=42)
+""" decTree = DecisionTreeRegressor(random_state=42)
 decTree.fit(X_train_transformed, y_reg_train)
-dt_pred = decTree.predict(X_test_transformed)
+dt_pred = decTree.predict(X_test_transformed) """
 
 # Function to calculate evaluation metrics
 """ def evaluate_regression(y_true, y_pred, model_name):
@@ -230,20 +230,20 @@ print('\nRegression Models Summary:')
 print(regression_results_df) """
 
 # Random Forest feature importance
-randForest_importance = pd.DataFrame({
+""" randForest_importance = pd.DataFrame({
     'Feature': feature_names,
     'Importance': randForest.feature_importances_
-}).sort_values('Importance', ascending=False)
+}).sort_values('Importance', ascending=False) """
 
-print('\nRandom Forest Feature Importance:')
-print(randForest_importance.head(10))
+# Display the top 10 features for Random Forest
+""" print('\nRandom Forest Feature Importance:')
+print(randForest_importance.head(10)) """
 
 # Visualization 06 - Plot feature importance for Random Forest
-plt.figure(figsize=(12, 8))
+""" plt.figure(figsize=(10, 6))
 top_features = randForest_importance.head(10)
 ax = sns.barplot(x='Importance', y='Feature', data=top_features)
-# Add the value at the end of each bar
-for i in ax.patches:
+for i in ax.patches: # Add the value at the end of each bar
     ax.text(
         i.get_width() + 0.01,             # x position: slightly to the right of the bar
         i.get_y() + i.get_height() / 2,   # y position: vertical center of the bar
@@ -253,19 +253,20 @@ for i in ax.patches:
 plt.title('Random Forest - Top 10 Feature Importance for Profit Margin Prediction')
 plt.tight_layout()
 plt.savefig('visualizations/06-random_forest_feature_importance.png')
-plt.close()
+plt.close() """
 
 # Decision Tree feature importance
-decTree_importance = pd.DataFrame({
+""" decTree_importance = pd.DataFrame({
     'Feature': feature_names,
     'Importance': decTree.feature_importances_
-}).sort_values('Importance', ascending=False)
+}).sort_values('Importance', ascending=False) """
 
-print('\nDecision Tree Feature Importance:')
-print(decTree_importance.head(10))
+# Display the top 10 features for Decision Tree
+""" print('\nDecision Tree Feature Importance:')
+print(decTree_importance.head(10)) """
 
 # Visualization 07 - Plot feature importance for Decision Tree
-plt.figure(figsize=(12, 8))
+""" plt.figure(figsize=(10, 6))
 top_features = decTree_importance.head(10)
 ax = sns.barplot(x='Importance', y='Feature', data=top_features)
 for i in ax.patches: # Add the value at the end of each bar
@@ -278,4 +279,78 @@ for i in ax.patches: # Add the value at the end of each bar
 plt.title('Decision Tree - Top 10 Feature Importance for Profit Margin Prediction')
 plt.tight_layout()
 plt.savefig('visualizations/07-decision_tree_feature_importance.png')
+plt.close() """
+
+# Random Forest Classifier for High_Profit
+rf_clf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_clf.fit(X_train_transformed, y_clf_train)
+rf_clf_pred = rf_clf.predict(X_test_transformed)
+rf_clf_prob = rf_clf.predict_proba(X_test_transformed)[:, 1]
+
+# Calculate and display metrics
+""" accuracy = accuracy_score(y_clf_test, rf_clf_pred)
+precision = precision_score(y_clf_test, rf_clf_pred)
+recall = recall_score(y_clf_test, rf_clf_pred)
+f1 = f1_score(y_clf_test, rf_clf_pred)
+cm = confusion_matrix(y_clf_test, rf_clf_pred) """
+
+""" print('\nRandom Forest Classifier Performance:')
+print(f'Accuracy: {accuracy:.4f}')
+print(f'Precision: {precision:.4f}')
+print(f'Recall: {recall:.4f}')
+print(f'F1 Score: {f1:.4f}')
+print('\nConfusion Matrix:')
+print(cm) """
+
+# Visualization 08 - Random Forest Confusion Matrix Classifier
+""" plt.figure(figsize=(10, 6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False)
+plt.title('Confusion Matrix - High Profit Prediction')
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.xticks([0.5, 1.5], ['Low Profit', 'High Profit'])
+plt.yticks([0.5, 1.5], ['Low Profit', 'High Profit'])
+plt.tight_layout()
+plt.savefig('visualizations/08-confusion_matrix_randForest_classifier.png')
+plt.close() """
+
+# ROC curve
+fpr, tpr, _ = roc_curve(y_clf_test, rf_clf_prob)
+roc_auc = auc(fpr, tpr)
+
+# Visualization 09 - ROC Curve for High Profit Prediction
+plt.figure(figsize=(10, 6))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([-0.05, 1.0])
+plt.ylim([-0.05, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('ROC Curve - High Profit Prediction')
+plt.legend(loc='lower right')
+plt.savefig('visualizations/09-roc_curve_high_profit.png')
+plt.close()
+
+# Feature importance for Random Forest Classification
+randForest_clf_importance = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': rf_clf.feature_importances_
+}).sort_values('Importance', ascending=False)
+print('\nTop 10 features for predicting High Profit:')
+print(randForest_clf_importance.head(10))
+
+# Visualization 10 - Plot feature importance for Random Forest Classification
+plt.figure(figsize=(12, 8))
+top_features = randForest_clf_importance.head(10)
+ax = sns.barplot(x='Importance', y='Feature', data=top_features)
+for i in ax.patches: # Add the value at the end of each bar
+    ax.text(
+        i.get_width() + 0.01,             # x position: slightly to the right of the bar
+        i.get_y() + i.get_height() / 2,   # y position: vertical center of the bar
+        f'{i.get_width():.6f}',           # text to display (formatted float)
+        va='center'                       # vertical alignment
+    )
+plt.title('Random Forest - Top 10 Feature Importance for High Profit Prediction')
+plt.tight_layout()
+plt.savefig('visualizations/10-RandForest_classific_high_profit_feature_importance.png')
 plt.close()
