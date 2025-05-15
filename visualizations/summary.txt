@@ -1,0 +1,25 @@
+# Profit Margin Prediction Analysis
+
+## Regression Models Performance
+            Model            R² Score         RMSE          MAE
+Linear Regression -9118856321060.8887 1344495.0517 1087839.7120
+    Random Forest              0.9866       0.0515       0.0290
+    Decision Tree              0.9627       0.0859       0.0540
+
+## High Profit Classification Performance
+Accuracy: 0.9325
+Precision: 0.9164
+Recall: 0.9875
+F1 Score: 0.9506
+
+## Can we predict High Profit transactions reliably?
+Based on our Random Forest classifier, we can predict high profit transactions with good reliability.
+The model achieved an accuracy of 0.93 and precision of 0.92, meaning it correctly
+identifies high profit transactions most of the time.
+The F1 score of 0.95 indicates a good balance between precision and recall.
+
+## Which features are most influential for predicting High Profit?
+The most influential features for predicting high profit transactions are: 
+'B_Product_Unit_Price', 'B_Product_Unit_Cost', 'M_Discount_%', 'M_Shipping_Cost', 'M_Quantity'. 
+These features have the strongest impact on determining whether a transaction will yield high profit.
+Business strategies should focus on optimizing these key factors to maximize profitability.

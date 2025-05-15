@@ -23,6 +23,9 @@ data = pd.read_excel('SalesDB.xlsx')
 if not os.path.exists('visualizations'):
     os.makedirs('visualizations')
 
+# Configure pandas to display float numbers with 4 decimal places
+pd.set_option('display.float_format', '{:.4f}'.format)
+
 # Display the first few rows of the dataset
 print(data.head())
 
@@ -84,7 +87,7 @@ plt.close()
 
 # Select only numerical columns for correlation analysis
 numerical_columns = data.select_dtypes(include=[np.number])
-correlation_matrix = numerical_columns.corr(method='spearman')
+correlation_matrix = numerical_columns.corr()
 
 # Display the first few rows of the updated dataset
 print(numerical_columns.head())
@@ -300,7 +303,6 @@ precision = precision_score(y_clf_test, rf_clf_pred)
 recall = recall_score(y_clf_test, rf_clf_pred)
 f1 = f1_score(y_clf_test, rf_clf_pred)
 cm = confusion_matrix(y_clf_test, rf_clf_pred)
-
 print('\nRandom Forest Classifier Performance:')
 print(f'Accuracy: {accuracy:.4f}')
 print(f'Precision: {precision:.4f}')
@@ -369,9 +371,9 @@ plt.close()
 print('\nQuestion 1 - Can we predict High Profit transactions reliably?')
 if accuracy > 0.8 and precision > 0.8:
     reliability = "Based on our Random Forest classifier, we can predict high profit transactions with good reliability.\n"
-    reliability += f" The model achieved an accuracy of {accuracy:.2f} and precision of {precision:.2f}, meaning it correctly\n"
-    reliability += "identifies high profit transactions most of the time."
-    reliability += f" The F1 score of {f1:.2f} indicates a good balance between precision and recall."
+    reliability += f"The model achieved an accuracy of {accuracy:.2f} and precision of {precision:.2f}, meaning it correctly\n"
+    reliability += "identifies high profit transactions most of the time.\n"
+    reliability += f"The F1 score of {f1:.2f} indicates a good balance between precision and recall."
 else:
     reliability = "Our model shows moderate reliability in predicting high profit transactions.\n"
     reliability += f"With an accuracy of {accuracy:.2f} and precision of {precision:.2f}, there is room for improvement.\n"
